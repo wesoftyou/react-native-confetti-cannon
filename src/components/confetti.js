@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, Animated } from 'react-native';
+import CustomIcon from './../../../../src/Components/CustomIcon';
 
 import {randomValue} from '../utils';
 
@@ -25,10 +26,16 @@ class Confetti extends React.PureComponent<Props> {
   render() {
     const { left, bottom, transform, opacity } = this.props;
     const { width, height, isRounded, backgroundColor } = this;
-    const style = { left, bottom, width, height, backgroundColor, transform, opacity};
+    const style = { left, bottom, width, height, transform, opacity};
 
     return (
-      <Animated.View style={[styles.confetti, isRounded && styles.rounded, style]} />
+      <Animated.View style={[styles.confetti, isRounded && styles.rounded, style]} >
+        <CustomIcon
+          name="heart-donation"
+          size={width}
+          color="#BD1034"
+        />
+      </Animated.View>
     );
   }
 }
