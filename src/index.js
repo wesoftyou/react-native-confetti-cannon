@@ -102,7 +102,7 @@ class Explosion extends React.PureComponent<Props, State> {
   render() {
     const { origin, colors = DEFAULT_COLORS, fadeOut } = this.props;
     const { height, width } = Dimensions.get('window');
-
+    console.log(1);
     return (
       <React.Fragment>
         {this.state && this.state.items && this.state.items.map((item: Item, index: number) => {
