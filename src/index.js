@@ -70,7 +70,6 @@ class Explosion extends React.PureComponent<Props, State> {
         speedDelta: {
           rotateX: randomValue(0.3, 1),
           rotateY: randomValue(0.3, 1),
-          rotateZ: randomValue(0.3, 1)
         }
       };
       items.push(item);
@@ -85,16 +84,18 @@ class Explosion extends React.PureComponent<Props, State> {
     const { explosionSpeed = 350, fallSpeed = 3000 } = this.props;
 
     Animated.sequence([
-      Animated.timing(this.animation, {toValue: 0, duration: 0}),
+      Animated.timing(this.animation, {toValue: 0, duration: 0, useNativeDriver: true}),
       Animated.timing(this.animation, {
         toValue: 1,
         duration: explosionSpeed,
-        easing: Easing.out(Easing.quad)
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true
       }),
       Animated.timing(this.animation, {
         toValue: 2,
         duration: fallSpeed,
-        easing: Easing.quad
+        easing: Easing.quad,
+        useNativeDriver: true
       }),
     ]).start();
   };
@@ -106,14 +107,6 @@ class Explosion extends React.PureComponent<Props, State> {
     return (
       <React.Fragment>
         {this.state && this.state.items && this.state.items.map((item: Item, index: number) => {
-          const left = this.animation.interpolate({
-            inputRange: [0, 1, 2],
-            outputRange: [origin.x, item.leftDelta * width, item.leftDelta * width]
-          });
-          const bottom = this.animation.interpolate({
-            inputRange: [0, 1, 1 + item.topDelta, 2],
-            outputRange: [origin.y, item.topDelta * height, 0, 0]
-          });
           const rotateX = this.animation.interpolate({
             inputRange: [0, 2],
             outputRange: ['0deg', `${item.speedDelta.rotateX * 360 * 10}deg`]
@@ -122,22 +115,22 @@ class Explosion extends React.PureComponent<Props, State> {
             inputRange: [0, 2],
             outputRange: ['0deg', `${item.speedDelta.rotateY * 360 * 5}deg`]
           });
-          const rotateZ = this.animation.interpolate({
-            inputRange: [0, 2],
-            outputRange: ['0deg', `${item.speedDelta.rotateZ * 360 * 2}deg`]
-          });
           const translateX = this.animation.interpolate({
-            inputRange: [0, 0.4, 1.2, 2],
-            outputRange: [0, -(item.swingDelta * 30), (item.swingDelta * 30), 0]
+            inputRange: [0, 1, 2],
+            outputRange: [origin.x, item.leftDelta * width, item.leftDelta * width]
+          });
+          const translateY = this.animation.interpolate({
+            inputRange: [0, 1, 1 + item.topDelta, 2],
+            outputRange: [-origin.y, -item.topDelta * height, 0, 0]
           });
           const opacity = this.animation.interpolate({
             inputRange: [0, 1, 1.8, 2],
             outputRange: [1, 1, 1, fadeOut ? 0 : 1]
           });
-          const transform = [{rotateX}, {rotateY}, {rotateZ}, {translateX}];
+          const transform = [{translateY}, {translateX}, {rotateX}, {rotateY}];
 
           return (
-            <Confetti color={colors[Math.round(randomValue(0, colors.length - 1))]} left={left} bottom={bottom} transform={transform} opacity={opacity} key={index} />
+            <Confetti transform={transform}  bottom={0} opacity={opacity} key={index} />
           );
         })}
       </React.Fragment>
