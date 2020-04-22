@@ -130,7 +130,7 @@ class Explosion extends React.PureComponent<Props, State> {
           const transform = [{translateY}, {translateX}, {rotateX}, {rotateY}];
 
           return (
-            <Confetti transform={transform}  bottom={0} opacity={opacity} key={index} />
+            <Confetti transform={transform}  bottom={-30} opacity={opacity} key={index} />
           );
         })}
       </React.Fragment>
